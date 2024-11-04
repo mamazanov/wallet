@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Валютный обменник</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://img.freepik.com/premium-vector/stock-market-graph-forex-trading-chart-business-financial-concepts_87788-132.jpg');
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 5px; /* Уменьшил отступ для мобильных устройств */
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px; /* Уменьшил отступ для мобильных устройств */
+            border-radius: 10px;
+            width: 90%; /* Ширина контейнера 90% */
+            max-width: 350px; /* Ограничил максимальную ширину для больших экранов */
+            margin: 0 auto;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px; /* Уменьшил отступ внутри полей */
+            margin: 5px 0; /* Уменьшил отступ между полями */
+            border: none;
+            border-radius: 5px;
+            font-size: 14px; /* Уменьшил размер шрифта */
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px; /* Уменьшил отступ внутри кнопки */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px; /* Уменьшил размер шрифта */
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .details {
+            margin-top: 15px; /* Уменьшил отступ между элементами */
+            display: none;
+        }
+        .icon {
+            margin-top: 5px; /* Уменьшил отступ */
+        }
+        table {
+            margin: 15px auto; /* Уменьшил отступ */
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid white;
+            padding: 5px; /* Уменьшил отступ в ячейках */
+            text-align: center;
+            font-size: 14px; /* Уменьшил размер шрифта */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Обмен валюты</h1>
+
+        <h2>Курс НБКР</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Валюта</th>
+                    <th>Покупка</th>
+                    <th>Продажа</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USD</td>
+                    <td>85.800</td>
+                    <td>86.15</td>
+                </tr>
+                <tr>
+                    <td>EUR</td>
+                    <td>93.20</td>
+                    <td>93.84</td>
+                </tr>
+                <tr>
+                    <td>RUB</td>
+                    <td>0.883</td>
+                    <td>0.898</td>
+                </tr>
+                <tr>
+                    <td>KZT</td>
+                    <td>0.1758</td>
+                    <td>0.1892</td>
+                </tr>
+                <tr>
+                    <td>CNY</td>
+                    <td>12.04</td>
+                    <td>12.80</td>
+                </tr>
+                <tr>
+                    <td>GBP</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <label for="fromCurrency">Обменять:</label>
+        <select id="fromCurrency">
+            <option value="CNY">Юань</option>
+            <option value="KGS">Сом</option>
+            <option value="EUR">Евро</option>
+            <option value="USD">Доллар</option>
+        </select>
+
+        <label for="toCurrency">На:</label>
+        <select id="toCurrency">
+            <option value="KGS">Сом</option>
+            <option value="CNY">Юань</option>
+            <option value="EUR">Евро</option>
+            <option value="USD">Доллар</option>
+        </select>
+
+        <label for="amount">Сумма:</label>
+        <input type="number" id="amount" placeholder="Сумма">
+
+        <button id="submitBtn">Готов</button>
+
+        <div class="details" id="exchangeDetails">
+            <h2>Детали</h2>
+            <p>Обменяете <span id="exchangeAmount"></span> на <span id="exchangeToCurrency"></span></p>
+            <p>Получите: <span id="receivedAmount"></span></p>
+            <div class="icon">
+                <img src="https://play-lh.googleusercontent.com/xf5_bSz5pNxQHd2K9yig3wM8LAaDigaLhMWdjsVKwSPW0CoyFXoJNUr7Iix1hzTgyg0" alt="М Банк" width="50">
+                <p>М Банк: 0997 999 709</p>
+            </div>
+            <p id="waitingMessage">Подождите...</p>
+        </div>
+    </div>
+
+    <script>
+        const exchangeRates = {
+            "CNY": 12.04,
+            "KGS": 1,
+            "EUR": 93.20,
+            "USD": 85.800
+        };
+
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            var amount = parseFloat(document.getElementById('amount').value);
+            var fromCurrency = document.getElementById('fromCurrency').value;
+            var toCurrency = document.getElementById('toCurrency').value;
+
+            // Показать детали обмена
+            document.getElementById('exchangeAmount').innerText = amount + ' ' + fromCurrency;
+            document.getElementById('exchangeToCurrency').innerText = toCurrency;
+
+            // Вычислить получаемую сумму
+            var receivedAmount = amount * (exchangeRates[toCurrency] / exchangeRates[fromCurrency]);
+            document.getElementById('receivedAmount').innerText = receivedAmount.toFixed(2) + ' ' + toCurrency;
+
+            // Отобразить детали обмена
+            document.getElementById('exchangeDetails').style.display = 'block';
+
+            // Показать сообщение ожидания
+            document.getElementById('waitingMessage').style.display = 'block';
+            
+            // После 10 секунд отображаем иконку и номер банка
+            setTimeout(function() {
+                document.getElementById('waitingMessage').style.display = 'none';
+                alert("Вы успешно обменяли " + amount + " " + fromCurrency + " на " + receivedAmount.toFixed(2) + " " + toCurrency + "."); // Можете убрать, если не нужно
+            }, 10000);
+        });
+    </script>
+</body>
+</html>
